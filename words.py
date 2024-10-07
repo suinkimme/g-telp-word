@@ -28,6 +28,23 @@ def list_words():
             words.append(row)
     return words
 
+# 단어 수정
+def edit_word(target_word, new_word, new_meaning):
+    words = list_words()
+    found = False
+    with open(FILE_PATH, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['word', 'meaning', 'attempts', 'correct_attempts'])
+        for word, meaning, attempts, correct_attempts in words:
+            if word == target_word:
+                writer.writerow([new_word, new_meaning, attempts, correct_attempts])
+                found = True
+                print(f"'{target_word}' 단어가 '{new_word}'로 수정되었습니다.")
+            else:
+                writer.writerow([word, meaning, attempts, correct_attempts])
+    if not found:
+        print(f"'{target_word}' 단어를 찾을 수 없습니다.")
+
 # 텍스트 아트로 축하 메시지 출력
 def show_congratulations():
     print("""
@@ -73,6 +90,70 @@ def quiz_random():
     if all_correct:
         show_congratulations()
 
+# 뜻 -> 영단어 맞추기 퀴즈
+def quiz_meaning_to_word():
+    words = list_words()
+    if not words:
+        print("저장된 단어가 없습니다. 단어를 추가해 주세요.")
+        return
+    
+    all_correct = True  # 모든 단어를 맞췄는지 추적
+    
+    random.shuffle(words)  # 단어 목록을 랜덤하게 섞기
+    
+    for word_data in words:
+        word, meaning, attempts, correct_attempts = word_data
+        attempts = int(attempts)
+        correct_attempts = int(correct_attempts)
+
+        print(f"\n뜻: {meaning}")
+        user_answer = input("단어를 입력하세요: ")
+        
+        if user_answer.strip().lower() == word.lower():
+            print("정답입니다!")
+            correct_attempts += 1
+        else:
+            print(f"틀렸습니다. 정답은: {word}")
+            all_correct = False  # 틀린 단어가 있을 경우 False로 설정
+        
+        attempts += 1
+        update_word(word, attempts, correct_attempts)
+    
+    # 모든 단어를 맞춘 경우 축하 메시지 출력
+    if all_correct:
+        show_congratulations()
+
+# 전체 단어 퀴즈
+def quiz_all():
+    words = list_words()
+    if not words:
+        print("저장된 단어가 없습니다. 단어를 추가해 주세요.")
+        return
+    
+    all_correct = True  # 모든 단어를 맞췄는지 추적
+    
+    for word_data in words:
+        word, meaning, attempts, correct_attempts = word_data
+        attempts = int(attempts)
+        correct_attempts = int(correct_attempts)
+
+        print(f"\n단어: {word}")
+        user_answer = input("뜻을 입력하세요: ")
+        
+        if user_answer.strip().lower() == meaning.lower():
+            print("정답입니다!")
+            correct_attempts += 1
+        else:
+            print(f"틀렸습니다. 정답은: {meaning}")
+            all_correct = False  # 틀린 단어가 있을 경우 False로 설정
+        
+        attempts += 1
+        update_word(word, attempts, correct_attempts)
+    
+    # 모든 단어를 맞춘 경우 축하 메시지 출력
+    if all_correct:
+        show_congratulations()
+
 # 단어 업데이트
 def update_word(target_word, attempts, correct_attempts):
     words = list_words()
@@ -85,6 +166,22 @@ def update_word(target_word, attempts, correct_attempts):
             else:
                 writer.writerow([word, meaning, prev_attempts, prev_correct_attempts])
 
+# 복습할 단어 추천
+def review():
+    words = list_words()
+    review_words = [
+        (word, meaning, int(attempts), int(correct_attempts))
+        for word, meaning, attempts, correct_attempts in words
+        if int(attempts) > 0 and (int(correct_attempts) / int(attempts)) < 0.7
+    ]
+    
+    if review_words:
+        print("복습이 필요한 단어 목록:")
+        for word, meaning, attempts, correct_attempts in review_words:
+            print(f"- {word}: {meaning} (정답률: {correct_attempts}/{attempts})")
+    else:
+        print("복습이 필요한 단어가 없습니다!")
+
 # 프로그램 실행
 def main():
     init_file()
@@ -95,9 +192,10 @@ def main():
         print("2. 단어 목록 보기")
         print("3. 모든 단어 퀴즈")
         print("4. 랜덤 순서 퀴즈")
-        print("5. 복습할 단어 추천")
-        print("6. 단어 수정")
-        print("7. 종료")
+        print("5. 뜻 -> 영단어 맞추기 퀴즈")
+        print("6. 복습할 단어 추천")
+        print("7. 단어 수정")
+        print("8. 종료")
         
         choice = input("선택하세요: ")
         
@@ -123,15 +221,18 @@ def main():
             quiz_random()
         
         elif choice == '5':
-            review()
+            quiz_meaning_to_word()
         
         elif choice == '6':
+            review()
+        
+        elif choice == '7':
             target_word = input("수정할 단어를 입력하세요: ")
             new_word = input("새 단어를 입력하세요: ")
             new_meaning = input("새 뜻을 입력하세요: ")
             edit_word(target_word, new_word, new_meaning)
         
-        elif choice == '7':
+        elif choice == '8':
             print("프로그램을 종료합니다.")
             break
         
