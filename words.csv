@@ -1,11 +1,21 @@
 word,meaning,attempts,correct_attempts
-acclaim,"인정, 찬사",17,13
-accommodate,~을 수용하다,17,10
-account,"이야기, 기사, 보도, 보고",17,13
-accurate,정확한,17,16
-address,"~을 처리하다, 해결하다",17,14
-adopt,~을 채택하다,17,15
-affordable,가격이 적절한,17,14
-alert,"정신이 맑은, 기민한",17,15
-alliance,동맹,17,17
-allow,~을 가능하게 하다,17,14
+acclaim,"인정, 찬사",19,15
+accommodate,~을 수용하다,19,12
+account,"이야기, 기사, 보도, 보고",19,14
+accurate,정확한,19,18
+address,"~을 처리하다, 해결하다",19,16
+adopt,~을 채택하다,19,17
+affordable,가격이 적절한,19,16
+alert,"정신이 맑은, 기민한",19,17
+alliance,동맹,19,19
+allow,~을 가능하게 하다,19,16
+ally,"연합군, 동맹국",0,0
+along with,~와 함께,0,0
+alongside,~와 함께,0,0
+alternative,대안이 되는,0,0
+ancient,고대의,0,0
+appearance,"외모, 외형",0,0
+applicant,"지원자, 신청자",0,0
+appropriate,적절한,0,0
+aptitude,"소질, 적성",0,0
+archaeological,고고학적인,0,0
